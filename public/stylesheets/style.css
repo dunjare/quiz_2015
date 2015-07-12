@@ -9,7 +9,7 @@ body {
 }
 
 #page-wrap {
-  marign: 2% auto;
+  margin: 2% auto;
   color: white;
 }
 
@@ -22,6 +22,7 @@ body {
 
 section > div {
   padding: 20px;
+
 }
 
 header, nav, section {
@@ -36,4 +37,14 @@ footer {
 
 nav span {
   margin: 0px 10px 0px 0px;
+}
+
+.author p {
+  float: left;
+}
+
+.author img {
+  margin: .5em;
+  border: 5px solid black;
+  width: 100px;
 }
