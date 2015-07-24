@@ -9,9 +9,15 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz_2015' });
 });
 
-// paso 1c Introducir nuevas rutas en el enrutador
-router.get('/quizes/question', quizController.question);
-router.get('/quizes/answer', quizController.answer);
+//Modulo 6 paso 1c Introducir nuevas rutas en el enrutador
+//router.get('/quizes/question', quizController.question);
+//router.get('/quizes/answer', quizController.answer);
+
+//modulo 7.3 lista de preguntas
+// Definición de rutas de /quizes
+router.get('/quizes',                      quizController.index);
+router.get('/quizes/:quizId(\\d+)',        quizController.show);
+router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 
 // modulo 6
 router.get('/author', function(req, res){
