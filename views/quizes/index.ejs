@@ -1,5 +1,22 @@
+<!-- Modulo 7 Ejercicio P2P: Busquedas -->
+<form name="busqueda" id="busqueda" action="/quizes">
+	<input type="text" name="search" id="search" placeholder="Indroduce tu búsqueda" value="<%=query%>"  />
+	<input type="submit" value="Buscar" /> </br>
+</form>
+	<%if(query) { %>
+		<a href="/quizes">Mostrar todas las preguntas</a>
+		<table><tr><td><%= quizes.length  %> 
+		<%if (quizes.length === 1) { %>		 
+		 	pregunta encontrada
+		<% } else { %>
+	  		preguntas encontradas <% } %> </td></tr></table> 
+	<% } else { %> 
+		<table><tr><td>Listado de preguntas </td></tr>
+	<% } %></table> 
+
+<!-- Modulo 7 Listar preguntas -->
 <table>
 <% var i; for (i=0; i < quizes.length; i++) { %>
-	<tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
+	<tr><td><%= quizes[i].id %>.- <a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
 <% } %>
 </table>
