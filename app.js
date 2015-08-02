@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var partials = require('express-partials'); // Agregar Marco de la aplicacion
+var methodOverride = require('method-override'); // mdo 8 editar pregunta
+
 
 var routes = require('./routes/index'); // Importar enrutadores
 
@@ -22,6 +24,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());  // Instalar middlewares
 app.use(bodyParser.urlencoded()); // modulo 8 modificacion { extended: false }));
 app.use(cookieParser());
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Instalar enrutadores y asociar rutas a sus gestores
