@@ -14,9 +14,14 @@
 		<table><tr><td>Listado de preguntas </td></tr>
 	<% } %></table> 
 
-<!-- Modulo 7 Listar preguntas -->
 <table>
+
+<!-- Modulo 8 Crear preguntas -->
+<tr><td><a href="/quizes/new"><button type="button">Crear pregunta </button></a></td></tr>
+
+<!-- Modulo 7 Listar preguntas -->
 <% var i; for (i=0; i < quizes.length; i++) { %>
 	<tr><td><%= quizes[i].id %>.- <a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
 <% } %>
 </table>
+
