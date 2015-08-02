@@ -31,6 +31,9 @@ router.post('/quizes/create', quizController.create);
 router.get('/quizes/:quizId(\\d+)/edit', quizController.edit);
 router.put('/quizes/:quizId(\\d+)', quizController.update);
 
+// modulo 8 Borrar preguntas
+router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
+
 
 // modulo 6
 router.get('/author', function(req, res){

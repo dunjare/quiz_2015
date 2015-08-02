@@ -119,3 +119,11 @@ exports.update = function(req, res) {
   );
 };
 
+// modulo 8 Borrar pregunta DB
+// DELETE /quizes/:id
+exports.destroy = function(req, res) {
+  req.quiz.destroy().then(function() {
+    res.redirect('/quizes');
+  }).catch(function(error) {next(error)});
+}
+
