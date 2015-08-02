@@ -1,19 +1,27 @@
 <!-- Modulo 8 crear pregunta -->
-<label for="preg" class="rem">Pregunta:</label>
-<input type="text" id="preg" name="quiz[pregunta]" value="<%=quiz.pregunta%>"/> <p>
-<label for="resp" class="rem">Respuesta:</label>
-<input type="text" id="resp" name="quiz[respuesta]" value="<%=quiz.respuesta%>"/> <p>
-
-<!-- Mod 8 - Ejercicio -->
-<p><label for="categoria" class="rem">Categoría:</label>
-<select name="quiz[tema]">
-  <option value="otro" selected>Otro</option>
-  <option value="humanidades">Humanidades</option>
-  <option value="ocio">Ocio</option>
-  <option value="ciencia">Ciencia</option>
-  <option value="tecnologia">Tecnología</option>
-</select></p>
-
-<a href="/quizes"><button type="button">Cancelar</button></a>
-<button type="submit">Salvar</button>
+<table>
+	<tr><td>
+		<label for="preg" class="rem">Pregunta:</label></td><td>
+		<input type="text" id="preg" name="quiz[pregunta]" value="<%=quiz.pregunta%>"/> <p></td></tr>
+		<tr><td><label for="resp" class="rem">Respuesta:</label></td><td>
+		<input type="text" id="resp" name="quiz[respuesta]" value="<%=quiz.respuesta%>"/> <p>
+	</td></tr>
+	<!-- Mod 8 - Ejercicio Agregar Indice temático -->
+	<tr><td>
+		<label for="categoria" class="rem">Categoría:</label></td>
+		<td>
+			<select name="quiz[tema]">
+			  <option value="">Selecionar categoría</option>
+			  <option value="otro">Otro</option>
+			  <option value="humanidades">Humanidades</option>
+			  <option value="ocio">Ocio</option>
+			  <option value="ciencia">Ciencia</option>
+			  <option value="tecnologia">Tecnología</option>
+			</select></td></tr>
+		<tr></td>
+	<td><td>
+		<a href="/quizes"><button type="button">Cancelar</button></a>
+		<button type="submit">Salvar</button>
+	</td></tr>
+</table>
 <!-- <input type="submit" value="Salvar"> -->

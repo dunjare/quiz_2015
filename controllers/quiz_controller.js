@@ -82,7 +82,7 @@ exports.create = function(req, res) {
         res.render('quizes/new', {quiz: quiz, errors: err.errors});
       } else {
         quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save({fields: ["pregunta", "respuesta", "Tema"]}) // Mod 8 - Ejercicio agregar Indice tematico
+        .save({fields: ["pregunta", "respuesta", "tema"]}) // Mod 8 - Ejercicio agregar Indice tematico
         .then( function(){ 
           // Redirecciona HTTP (URL relativo) a Lista de preguntas
           res.redirect('/quizes')}) 
