@@ -38,6 +38,11 @@ footer {
 nav span {
   margin: 0px 10px 0px 0px;
 }
+/*-- Mod 8  Style Validate --*/
+#ErrorMsgs { 
+  color: #f61; 
+  font-size: smaler
+}
 
 .author p {
   float: left;
