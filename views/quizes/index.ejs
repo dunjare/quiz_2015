@@ -22,22 +22,19 @@
 		<strong> Listado de preguntas </strong>
 	<% } %>
 	</td>
-
 	<td><a href="/quizes/new"><button type="button">Crear pregunta </button></a></td></tr> <!-- Modulo 8 Crear preguntas -->
 
 <!-- Modulo 7 Listar preguntas -->
 <% var i; for (i=0; i < quizes.length; i++) { %>
 	<tr>
-		<td><%= quizes[i].id %>.- <a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
-		<td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
-		<td>
- 		<form method="post" action="quizes/<%=quizes[i].id %>?_method=delete">
-	      	<!--<input type="submit" value=borrar onClick="return confirm('Borrar: 
-	      		<%= quizes[i].pregunta %>');"/>-->
-      		<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta%>');"> borrar
-      		</button>
-   		</form>
-		</td>
+		<td><%= quizes[i].id %>.- <a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %> (<%= quizes[i].tema %>)</a></td>
+		<td><table><tr><td>
+			<a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
+	 		<td><form method="post" action="quizes/<%=quizes[i].id %>?_method=delete">
+	      		<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta%>');"> borrar
+	      		</button>
+	   		</form>
+	   	</td></tr></table></td>
 	</tr>
 <% } %>
 </table>

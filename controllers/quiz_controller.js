@@ -64,7 +64,7 @@ exports.answer = function(req, res) {
 // GET /quizes/new
 exports.new = function(req, res) {
   var quiz= models.Quiz.build({ // crea un objeto quiz, campos igual que nuestra tabla
-        pregunta:"Pregunta", respuesta:"Respuesta"
+        pregunta:"Pregunta", respuesta:"Respuesta", tema: "Tema" // Mod 8 - Ejercicio agregar Indice tematico
       });
    res.render('quizes/new', {quiz: quiz, errors: []});
 };
@@ -82,7 +82,7 @@ exports.create = function(req, res) {
         res.render('quizes/new', {quiz: quiz, errors: err.errors});
       } else {
         quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save({fields: ["pregunta", "respuesta"]})
+        .save({fields: ["pregunta", "respuesta", "Tema"]}) // Mod 8 - Ejercicio agregar Indice tematico
         .then( function(){ 
           // Redirecciona HTTP (URL relativo) a Lista de preguntas
           res.redirect('/quizes')}) 
@@ -103,6 +103,7 @@ exports.edit = function(req, res) {
 exports.update = function(req, res) {
   req.quiz.pregunta = req.body.quiz.pregunta;
   req.quiz.respuesta = req.body.quiz.respuesta;
+  req.quiz.tema = req.body.quiz.tema; // Mod 8 - Ejercicio agregar Indice tematico
   req.quiz  
     .validate()
     .then(function(err) {
@@ -110,7 +111,7 @@ exports.update = function(req, res) {
         res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
       } else {
         req.quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save( { fields: ['pregunta', 'respuesta'] })
+        .save( { fields: ['pregunta', 'respuesta', 'tema'] }) // Mod 8 - Ejercicio agregar Indice tematico
         .then(function() {
           res.redirect('/quizes'); // Redirecciona HTTP (URL relativo) a Lista de preguntas
         });
