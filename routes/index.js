@@ -4,6 +4,9 @@ var router = express.Router();
 // paso 1b Importar controlador
 var quizController = require('../controllers/quiz_controller');
 
+// mod 9 Crear comentario
+var commentController = require('../controllers/comment_controller');
+
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz_2015', errors: [] }); // mod 8 Validation 	
@@ -33,6 +36,10 @@ router.put('/quizes/:quizId(\\d+)', quizController.update);
 
 // modulo 8 Borrar preguntas
 router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
+
+// modulo 9 Crear comentario
+router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
+router.post('/quizes/:quizId(\\d+)/comments', commentController.create);
 
 
 // modulo 6
