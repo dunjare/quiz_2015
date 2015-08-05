@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var partials = require('express-partials'); // Agregar Marco de la aplicacion
 var methodOverride = require('method-override'); // mdo 8 editar pregunta
-
+var session = require('express-session'); // mod 9 Quiz 16: importar paquete 
 
 var routes = require('./routes/index'); // Importar enrutadores
 
@@ -23,9 +23,29 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));  
 app.use(bodyParser.json());  // Instalar middlewares
 app.use(bodyParser.urlencoded()); // modulo 8 modificacion { extended: false }));
-app.use(cookieParser());
+
+app.use(cookieParser('Quiz 2015')); // Mod 9 - Quiz 16: añadir semilla para cifrar cookie
+app.use(session()); // Mod 9 - Quiz 16: Instalar MW session
+
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Mod 9 - Quiz 16 Helpers dinamicos
+app.use(function(req, res, next) {
+
+  // si no existe lo inicializa
+  if (!req.session.redir) {
+    req.session.redir = '/';
+  }
+  // guardar path en session.redir para despues de login
+  if (!req.path.match(/\/login|\/logout/)) {
+    req.session.redir = req.path;
+  }
+
+  // Hacer visible req.session en las vistas
+  res.locals.session = req.session;
+  next();
+});
 
 // Instalar enrutadores y asociar rutas a sus gestores
 app.use('/', routes);     // Ruta base, Home

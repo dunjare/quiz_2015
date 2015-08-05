@@ -7,6 +7,9 @@ var quizController = require('../controllers/quiz_controller');
 // mod 9 Crear comentario
 var commentController = require('../controllers/comment_controller');
 
+// mod 9 quiz 16 crear session
+var sessionController = require('../controllers/session_controller');
+
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz_2015', errors: [] }); // mod 8 Validation 	
@@ -18,8 +21,15 @@ router.get('/', function(req, res) {
 
 ////modulo 7.3 lista de preguntas
 
-// Autoload de comandos con ids
+// Autoload de comandos con :quizId
 router.param('quizId', quizController.load);  // autoload :quizId
+
+
+// Mod 9 - Quiz 16 Definicion de rutas de sesion
+router.get('/login', sessionController.new); // Formulario Login
+router.post('/login', sessionController.create); // Crear sesion
+router.get('/logout', sessionController.destroy); // destruir session //TODO: usar DELETE
+
 
 // Definición de rutas de /quizes
 router.get('/quizes', quizController.index);
