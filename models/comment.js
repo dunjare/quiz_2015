@@ -1,3 +1,4 @@
+// Quiz_2015 Dunjare
 // Definicion del modelo de Quiz con validación
 
 module.exports = function(sequelize, DataTypes) {
@@ -6,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
     { texto: {
         type: DataTypes.STRING,
         validate: { notEmpty: {msg: "-> Falta Comentario"}}
+      },
+      publicado: {
+      	type: DataTypes.BOOLEAN,
+      	defaultValue: false
       }
     }    
   );

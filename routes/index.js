@@ -25,6 +25,7 @@ router.get('/', function(req, res) {
 
 // Autoload de comandos con :quizId
 router.param('quizId', quizController.load);  // autoload :quizId
+router.param('commentId', commentController.load);  // mod 9 quiz 18 - Moderacion de comentarios autoload :commentId
 
 
 // Mod 9 - Quiz 16 Definicion de Autorizacion
@@ -59,6 +60,8 @@ router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
 // modulo 9 Crear comentario
 router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments', commentController.create);
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionController.loginRequired, commentController.publish);  // mod 9 quiz 18 - Moderacion de comentarios 
+
 
 
 // modulo 6
