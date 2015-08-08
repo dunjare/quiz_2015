@@ -1,3 +1,5 @@
+// Quiz_2015 Dunjare
+
 var express = require('express');
 var router = express.Router();
 
@@ -25,10 +27,17 @@ router.get('/', function(req, res) {
 router.param('quizId', quizController.load);  // autoload :quizId
 
 
-// Mod 9 - Quiz 16 Definicion de rutas de sesion
+// Mod 9 - Quiz 16 Definicion de Autorizacion
 router.get('/login', sessionController.new); // Formulario Login
 router.post('/login', sessionController.create); // Crear sesion
 router.get('/logout', sessionController.destroy); // destruir session //TODO: usar DELETE
+
+// Mod 9 - Quiz 17 Definicion de rutas de sesion
+router.get('/quizes/new', 				   sessionController.loginRequired, quizController.new);
+router.post('/quizes/create',              sessionController.loginRequired, quizController.create);
+router.get('/quizes/:quizId(\\d+)/edit',   sessionController.loginRequired, quizController.edit);
+router.put('/quizes/:quizId(\\d+)',        sessionController.loginRequired, quizController.update);
+router.delete('/quizes/:quizId(\\d+)',     sessionController.loginRequired, quizController.destroy);
 
 
 // Definición de rutas de /quizes

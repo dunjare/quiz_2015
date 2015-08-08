@@ -1,6 +1,17 @@
 // quiz_2015 Dunjare
 // Modulo 9 Quiz 16  - Crear sesion
 
+
+// Mod 9 - Quiz 17 - MW de autorización de accesos HTTP restringidos
+exports.loginRequired = function(req, res, next){
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+};
+
+
 // Get /login   -- Formulario de login
 exports.new = function(req, res) {
     var errors = req.session.errors || {};
