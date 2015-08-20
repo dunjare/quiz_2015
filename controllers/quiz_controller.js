@@ -2,137 +2,164 @@
 // Modulo 7 importar modelo para acceder a DB
 var models = require('../models/models.js');
 
-// modulo 7 lista de preguntas
-// Autoload - Factoriza el codigo se la ruta incluye  :quizId
-/*exports.load = function(req, res, next, quizId) {
-  models.Quiz.find(quizId).then(
-    function(quiz) {
-      if(quiz) {
-        req.quiz = quiz;
-        next();
-      } else {
-        next(new Error('No existe el quizId=' + quizId));
-      }
-    }
-  ).catch(function(error) { next(error); });
-};*/
+exports.ownershipRequired = function(req, res, next) {
+  var objQuizOwner = req.quiz.UserId;
+  if(req.headers.authorization) {
+    var logUser = req.user.id;
+    var isAdmin = req.user.isAdmin;
+  } else {
+    var logUser = req.session.user.id;
+    var isAdmin = req.session.user.isAdmin;
+  }
 
-exports.load = function(req, res, next, quizId) {
-  models.Quiz.find({
-         where: {
-            id: Number(quizId)
-          },
-          include: [{
-            model: models.Comment
-          }]
-        })
-  
-      .then(function(quiz) {
-        if (quiz) {
-          req.quiz = quiz;
-          next();
-        } else { next(new Error('No existe quizId=' + quizId)); }
-      }
-    ).catch(function(error)  { next(error);
-  });  
+  if(isAdmin || objQuizOwner === logUser) {
+    next();
+  } else {
+    res.redirect('/');
+  }
 };
 
-// modulo 7 Busquedas
+//Autoload Quiz
+exports.load = function(req, res, next, quizId) {
+  models.Quiz.find({
+    where: {id: Number(quizId)},
+    include: [{model: models.Comment}]
+  }).then(function(quiz) {
+    if(quiz) {
+      req.quiz = quiz;
+      next();
+    } else {
+      next(new Error('No existe quizId=' + quizId));
+    }
+  }).catch(function(error) { next(error) });;
+};
+
+
 // GET /quizes
 exports.index = function(req, res) {
   var where = {};
-  var buscar = req.query.search || '';
-  if(buscar) {
-    where = {where: ["pregunta like ?", '%' + buscar.replace(' ', '%') + '%'], order: 'pregunta'};
+  var search = req.query.search || '';
+
+  if(req.query.search) {
+    where = {where: ["pregunta like ?", '%' + search.replace(' ', '%') + '%'], order: 'pregunta'};
   }
+
+  if(req.user) {
+    where = {where: {UserId: req.user.id}};
+  }
+
   models.Quiz.findAll(where).then(function(quizes) {
-    res.render('quizes/index.ejs', {quizes: quizes, query: buscar, errors: []
-    });
-  }
-  ).catch(function(error) { //next(error);
-  } );
+    res.render('quizes/index.ejs', {quizes: quizes, query: search, errors: []});
+  }).catch(function(error) { next(error);} );
 };
 
-// GET /quizes/:id
+// GET /quizes/question
 exports.show = function(req, res) {
     res.render('quizes/show', {quiz: req.quiz, errors: []});
 };
 
-// GET /quizes/:id/answer
+// GET /quizes/answer
 exports.answer = function(req, res) {
   var resultado= 'Incorrecto';
-  // Todo a minusculas .toLowerCase()
-  if(req.query.respuesta.toLowerCase() === req.quiz.respuesta.toLowerCase()) {
+  if(req.query.respuesta === req.quiz.respuesta) {
     resultado = 'Correcto';
   }
   res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
-// modulo 8 crear preguntas
-// GET /quizes/new
+//GET /quizes/new
 exports.new = function(req, res) {
-  var quiz= models.Quiz.build({ // crea un objeto quiz, campos igual que nuestra tabla
-        pregunta:"Pregunta", respuesta:"Respuesta", tema: "Tema" // Mod 8 - Ejercicio agregar Indice tematico
-      });
-   res.render('quizes/new', {quiz: quiz, errors: []});
+  var quiz = models.Quiz.build({
+      pregunta: "Pregunta",
+      respuesta: "Respuesta",
+      tema: "Tema"
+  });
+  res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
-// modulo 8 crear preguntas
-// Post /quizes/create
+//POST /quizes/create
 exports.create = function(req, res) {
+  console.log('--------');
+  console.log(req.user);
+  if(req.session.user) {
+    req.body.quiz.UserId = req.session.user.id;
+  } else {
+    if(req.isAjax) {
+      console.log(req.body.quiz);
+      req.body.quiz.UserId = req.user.id;
+    }
+  }
+
+  if(req.file) {
+    req.quiz.image = req.file.filename;
+  }
   var quiz = models.Quiz.build(req.body.quiz);
-    // save: guarda en DB campos pregunta y respuesta de quiz
   quiz
   .validate()
-  .then(
-    function(err){
-      if (err) {
-        res.render('quizes/new', {quiz: quiz, errors: err.errors});
-      } else {
-        quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save({fields: ["pregunta", "respuesta", "tema"]}) // Mod 8 - Ejercicio agregar Indice tematico
-        .then( function(){ 
-          // Redirecciona HTTP (URL relativo) a Lista de preguntas
-          res.redirect('/quizes')}) 
-      }      
+  .then(function(err) {
+    if(err) {
+      res.render('quizes/new', {quiz: quiz, errors: err.errors});
+    } else {
+      quiz
+      .save({
+        fields: ["pregunta", "respuesta", "tema", "UserId"]
+      })
+      .then(function() {
+        if(req.isAjax) {
+          res.send('ok');
+        } else {
+          res.redirect('/quizes');
+        }
+      })
     }
-  );
+  })
 };
 
-// modulo 8 Editar preguntas
-// GET /quizes/:id/edit
 exports.edit = function(req, res) {
-  var quiz = req.quiz; // autoload de instancia de quiz
+  var quiz = req.quiz;
   res.render('quizes/edit', {quiz: quiz, errors: []});
-};
+}
 
-// modulo 8 Actualizar pregunta DB
-// PUT /quizes/:id
+
+exports.image = function(req, res) {
+  res.send(req.quiz.image);
+}
+
 exports.update = function(req, res) {
   req.quiz.pregunta = req.body.quiz.pregunta;
+  if(req.file) {
+    req.quiz.image = req.file.buffer;
+  }
+  console.log(req.file.buffer);
   req.quiz.respuesta = req.body.quiz.respuesta;
-  req.quiz.tema = req.body.quiz.tema; // Mod 8 - Ejercicio agregar Indice tematico
-  req.quiz  
-    .validate()
-    .then(function(err) {
-      if(err) {
-        res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
-      } else {
-        req.quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save( { fields: ['pregunta', 'respuesta', 'tema'] }) // Mod 8 - Ejercicio agregar Indice tematico
-        .then(function() {
-          res.redirect('/quizes'); // Redirecciona HTTP (URL relativo) a Lista de preguntas
-        });
-      }
+  req.quiz.tema = req.body.quiz.tema;
+
+
+  req.quiz
+  .validate()
+  .then(function(err) {
+    if(err) {
+      res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+    } else {
+      req.quiz
+      .save( { fields: ['pregunta', 'respuesta', 'tema', 'image'] })
+      .then(function() {
+        if(req.isAjax) {
+          res.send('ok');
+        } else {
+          res.redirect('/quizes');
+        }
+      });
     }
-  );
+  });
 };
 
-// modulo 8 Borrar pregunta DB
-// DELETE /quizes/:id
 exports.destroy = function(req, res) {
   req.quiz.destroy().then(function() {
-    res.redirect('/quizes');
+    if(req.isAjax) {
+      res.send('ok');
+    } else {
+      res.redirect('/quizes');
+    }
   }).catch(function(error) {next(error)});
-};
-
+}

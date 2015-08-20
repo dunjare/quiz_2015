@@ -1,4 +1,10 @@
 <!-- Quiz_2015 Dunjare -->
+
+<!-- Modulo EXTRA IMAGEN -->
+<%if (quiz.image){%>
+<p><img class="quiz_img" src="/quizes/<%=quiz.id%>/image"%>"></p>
+<%}%>
+
 <form method="get" action="/quizes/<%= quiz.id %>/answer">
   <p>Pregunta: <%= quiz.pregunta %> </p>
   <input type="text" name="respuesta" placeholder="Introduce tu respuesta" /></br>
@@ -10,13 +16,12 @@
 
 <!-- Modulo 9 Quiz 18 Moderacion de Comentario -->
 <p><strong>Comentarios:</strong></p>
-	<%for(index in quiz.Comments){ %>
-		<%if(quiz.Comments[index].publicado || session.user){%>
+<%for(index in quiz.Comments){%>
+	<%if(quiz.Comments[index].publicado){%>
+		<p>- <%=quiz.Comments[index].texto%></p>
+	<%} // Mod 9 Quiz 20-21 Users
+	else if(session.user && (session.user.isAdmin || (session.user && quiz.UserId === session.user.id))){%>
 			<p>- <%=quiz.Comments[index].texto%>
-		  	<%if(session.user && !quiz.Comments[index].publicado){%>
-				<a href="/quizes/<%= quiz.id %>/comments/<%=quiz.Comments[index].id%>/publish"><button>Publicar</button></a>
-			<%}%>
-			</p>
-		<%}%>
+			<a href="/quizes/<%= quiz.id %>/comments/<%=quiz.Comments[index].id%>/publish"><button>Publicar</button></a></p>
 	<%}%>
-
+<%}%>

@@ -36,27 +36,51 @@ var Quiz = sequelize.import(path.join(__dirname,'quiz'));
 // Importar definicion de la tabla Comment
 var Comment = sequelize.import(path.join(__dirname,'comment'));
 
+// Modulo 9 Quiz 20 - Crear Usuario
+// Importar definicion de la tabla User
+var User = sequelize.import(path.join(__dirname, 'user'));
+
 Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 
+// los quizes pertenecen a un usuario registrado
+Quiz.belongsTo(User);
+User.hasMany(Quiz);
 
 exports.Quiz=Quiz; // exportar definicion de tabla Quiz
 
 exports.Comment = Comment; // Mod 9 exportar definicion de tabla Comment
 
+exports.User = User; // Modulo 9 Quiz 20 - exportar definicion de tabla Usuario
+
 // sequelize.sync() crea e inicializa tabla de preguntas en DB
 sequelize.sync().then(function() {
   // then(..) ejecuta el manejador una vez creada la tabla
-  Quiz.count().then(function (count){
-    if(count === 0) {   // la tabla se inicializa solo si está vacía
-      Quiz.create({ pregunta: 'Capital de Italia',   
-                    respuesta: 'Roma',
-                    tema: 'Humanidades'})
-      Quiz.create({ pregunta: 'Capital de Portugal',   
-                    respuesta: 'Lisboa',
-                    tema: 'Otro'
-                  })
-      .then(function(){console.log('Base de datos inicializada')});
-    };
+ // Modulo 9 Quiz 20 - Inicializar tabla User
+  User.count().then(function(count) {
+    if(count === 0) {
+      User.bulkCreate([
+        {username: 'admin', password: '1234', isAdmin: true},
+        {username: 'pepe', password: '5678'} // isAdmin por defecto: false
+      ])
+      .then(function() {
+        console.log('Base de datos (tabla user) inicializada');
+        Quiz.count().then(function (count){
+          if(count === 0) {   // la tabla se inicializa solo si está vacía
+            Quiz.create({ pregunta: 'Capital de Italia',   
+                          respuesta: 'Roma',
+                          UserId: 2,
+                          tema: 'Humanidades'})
+            Quiz.create({ pregunta: 'Capital de Portugal',   
+                          respuesta: 'Lisboa',
+                          UserId: 2,
+                          tema: 'Otro'
+                        })
+            .then(function(){console.log('Base de datos inicializada')});
+          }
+        });
+      })
+    }
   });
 });
+
