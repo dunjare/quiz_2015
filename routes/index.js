@@ -9,7 +9,7 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
 var sessionController = require('../controllers/session_controller');
-var stadisticController = require('../controllers/stadistic_controller');
+var statisticsController = require('../controllers/statistics_controller');
 var userController = require('../controllers/user_controller')
 
 /* GET home page. */
@@ -17,8 +17,7 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz', errors: [] });
 });
 
-// Estadisticas
-router.get('/quizes/stadistics', stadisticController.index);
+
 
 //Autoload
 router.param('quizId', quizController.load);
@@ -53,6 +52,7 @@ router.get('/quizes/:quizId(\\d+)/comment/:commentId(\\d+)/publish', sessionCont
 router.get('/author', function(req, res) {
   res.render('author.ejs', {errors: []});
 });
-
-
+// Estatisticas
+//router.get('/quizes/statistics', statisticController.index);
+router.get('/quizes/statistics',     statisticsController.calculate, statisticsController.show);
 module.exports = router;

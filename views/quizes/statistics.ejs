@@ -1,0 +1,17 @@
+<!-- Quiz_2015 Dunjare -->
+
+<!-- Modulo 9 ejercicio P2P -->
+<strong>Estadíticas: </strong>
+<fieldset>
+      <legend>Estadísticas</legend> 
+        <ul>
+          <li>Total Preguntas:  <%=statistics.questions%></li>
+          <li>Total Comentarios: <%=statistics.comments%></li>
+          <li>Media de comentarios por pregunta: 
+              <%= statistics.questions?(statistics.comments / statistics.questions)
+              .toFixed(2):0 %></li>
+          <li>Pendientes de Publicar: <%=statistics.unpublished%></li>
+          <li>Comentarios Publicados: <%=statistics.published%></li>
+        </ul>
+</fieldset>
+

@@ -14,13 +14,16 @@ module.exports = function(sequelize, DataTypes) {
       }
     }, 
     {
-    classMethods: {
-      countPublished: function() {
-        return this.count({ where: { publicado: true }});
-      },
-      countQuizesCommented: function() {
-        return this.aggregate('QuizId', 'count', {'distinct': true, 'where': {'publicado':true}});
-      }
-    }
-  });
+          classMethods: { 
+            count: function () {
+              return this.aggregate('QuizId', 'count', { distinct: false })
+            },
+            countUnpublished: function () {
+                return this.count({ where: { publicado: false } });
+              },
+            countCommentedQuizes: function () {
+              return this.aggregate('publicado', 'count', { distinct: false })
+            } 
+          }
+        });
 };
