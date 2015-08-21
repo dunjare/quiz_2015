@@ -83,4 +83,3 @@ sequelize.sync().then(function() {
     }
   });
 });
-
